@@ -198,9 +198,32 @@ ChipClaw includes fallbacks for desktop Python testing:
 # Install dependencies
 pip install aiohttp
 
+# Run the test suite
+python tests/test_runner.py
+```
+
+The testing framework is designed to work with both CPython and MicroPython:
+- Simple assertion-based tests
+- No external dependencies (unittest/pytest)
+- Compatible with MicroPython's limited stdlib
+
+See [tests/README.md](tests/README.md) for detailed testing documentation.
+
+### Running Main on Desktop
+
+You can also run the main application on desktop for development:
+
+```bash
 # Run main.py (will use fallbacks for MicroPython modules)
 python main.py
 ```
+
+### Continuous Integration
+
+The project uses GitHub Actions for automated testing:
+- Tests run on Python 3.9, 3.10, and 3.11
+- Syntax checking for all Python files
+- Runs on every push and pull request
 
 ### Resource Analysis
 
