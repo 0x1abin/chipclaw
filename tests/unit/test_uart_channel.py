@@ -145,5 +145,4 @@ def test_uart_channel_no_machine_uart():
 
 if __name__ == "__main__":
     from tests import run_tests
-    import sys
     run_tests(sys.modules[__name__])

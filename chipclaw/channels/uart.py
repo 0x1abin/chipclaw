@@ -48,17 +48,18 @@ class UARTChannel(BaseChannel):
             try:
                 if self._poller:
                     events = self._poller.poll(0)
-                    if events:
-                        ch = sys.stdin.read(1)
-                        if ch:
-                            self.buffer += ch
-                            
-                            # Process complete lines
-                            while '\n' in self.buffer:
-                                line, self.buffer = self.buffer.split('\n', 1)
-                                line = line.strip()
-                                if line:
-                                    await self._handle_line(line)
+                    for _, ev in events:
+                        if ev & select.POLLIN:
+                            ch = sys.stdin.read(1)
+                            if ch:
+                                self.buffer += ch
+                    
+                    # Process complete lines
+                    while '\n' in self.buffer:
+                        line, self.buffer = self.buffer.split('\n', 1)
+                        line = line.strip()
+                        if line:
+                            await self._handle_line(line)
                 
                 await asyncio.sleep_ms(50)
             
