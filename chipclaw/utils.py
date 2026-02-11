@@ -29,11 +29,30 @@ def file_exists(path):
 
 
 def ensure_dir(path):
-    """Create directory if it doesn't exist"""
-    try:
-        os.makedirs(path)
-    except OSError:
-        pass
+    """
+    Create directory if it doesn't exist (MicroPython compatible)
+    Handles nested directory creation by creating parent directories first
+    """
+    if file_exists(path):
+        return
+    
+    # Split path into components
+    parts = path.strip('/').split('/')
+    current = ''
+    
+    for part in parts:
+        if not part:
+            continue
+        current = current + '/' + part if current else part
+        
+        # Try to create directory if it doesn't exist
+        if not file_exists(current):
+            try:
+                os.mkdir(current)
+            except OSError as e:
+                # Ignore error if directory already exists (race condition)
+                if not file_exists(current):
+                    raise
 
 
 def today_date():
