@@ -3,16 +3,18 @@ ChipClaw Message Bus Queue
 """
 try:
     import uasyncio as asyncio
+    from uasyncio import Queue
 except ImportError:
     import asyncio
+    from asyncio import Queue
 
 
 class MessageBus:
     """Central message routing with asyncio queues"""
     
     def __init__(self):
-        self.inbound = asyncio.Queue()    # InboundMessage queue
-        self.outbound = asyncio.Queue()   # OutboundMessage queue
+        self.inbound = Queue()    # InboundMessage queue
+        self.outbound = Queue()   # OutboundMessage queue
         self.subscribers = {}             # {channel_name: callback}
         self._running = False
     
