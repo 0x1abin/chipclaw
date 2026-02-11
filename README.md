@@ -53,13 +53,16 @@ Edit `config.json`:
 Use `mpremote` to upload the entire repository to your ESP32-S3:
 
 ```bash
-# Using mpremote
-mpremote connect /dev/ttyUSB0 fs cp boot.py :boot.py
-mpremote connect /dev/ttyUSB0 fs cp main.py :main.py
-mpremote connect /dev/ttyUSB0 fs cp config.json :config.json
-mpremote connect /dev/ttyUSB0 fs cp -r chipclaw :chipclaw
-mpremote connect /dev/ttyUSB0 fs cp -r workspace :workspace
-mpremote connect /dev/ttyUSB0 fs cp -r data :data
+# Using mpremote (set device as environment variable for convenience)
+export MPREMOTE_DEVICE=/dev/ttyUSB0
+
+# Upload files and directories
+mpremote fs cp boot.py :boot.py
+mpremote fs cp main.py :main.py
+mpremote fs cp config.json :config.json
+mpremote fs cp -r chipclaw :chipclaw
+mpremote fs cp -r workspace :workspace
+mpremote fs cp -r data :data
 ```
 
 ### 4. Run ChipClaw
