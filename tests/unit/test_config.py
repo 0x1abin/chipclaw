@@ -119,7 +119,7 @@ def test_config_deep_merge():
         assert config.get("channels", "mqtt", "enabled") is True
         assert config.get("channels", "mqtt", "broker") == "test.broker.com"
         
-        # Default values should still be present
+        # Default values should still be present (deep merge preserves unspecified defaults)
         assert config.get("channels", "mqtt", "port") == 1883
         assert config.get("channels", "uart", "enabled") is True
         

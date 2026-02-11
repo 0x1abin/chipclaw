@@ -15,6 +15,16 @@ from chipclaw.bus.queue import MessageBus
 from chipclaw.bus.events import InboundMessage, OutboundMessage
 
 
+def run_async_test(test_func):
+    """Helper to run async test functions with proper event loop setup"""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        loop.run_until_complete(test_func())
+    finally:
+        loop.close()
+
+
 def test_message_bus_inbound():
     """Test message bus inbound message handling"""
     async def run_test():
@@ -40,13 +50,7 @@ def test_message_bus_inbound():
         assert msg.sender_id == "user1"
         assert msg.chat_id == "chat1"
     
-    # Run the async test - use new_event_loop for Python 3.10+
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    try:
-        loop.run_until_complete(run_test())
-    finally:
-        loop.close()
+    run_async_test(run_test)
 
 
 def test_message_bus_outbound_subscribe():
@@ -65,12 +69,7 @@ def test_message_bus_outbound_subscribe():
         assert "test_channel" in bus.subscribers
         assert bus.subscribers["test_channel"] == handler
     
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    try:
-        loop.run_until_complete(run_test())
-    finally:
-        loop.close()
+    run_async_test(run_test)
 
 
 def test_message_bus_multiple_messages():
@@ -94,12 +93,7 @@ def test_message_bus_multiple_messages():
             assert msg.content == f"Message {i}"
             assert msg.sender_id == f"user{i}"
     
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    try:
-        loop.run_until_complete(run_test())
-    finally:
-        loop.close()
+    run_async_test(run_test)
 
 
 if __name__ == "__main__":

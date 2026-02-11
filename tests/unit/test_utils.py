@@ -30,8 +30,10 @@ def test_truncate_string():
     
     long_string = "A" * 100
     truncated = truncate_string(long_string, 50)
-    assert len(truncated) <= 65  # 50 + "...(truncated)"
+    # truncate_string adds "...(truncated)" which is 14 chars
     assert truncated.endswith("...(truncated)")
+    # Should be exactly 50 chars + "...(truncated)" = 64 chars
+    assert len(truncated) == 64
 
 
 def test_today_date():
