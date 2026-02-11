@@ -12,6 +12,9 @@ def file_exists(path):
     In MicroPython, os.path module is not available, so we use os.stat
     which raises OSError if the file doesn't exist.
     
+    Note: This follows symbolic links. In MicroPython/ESP32 environments,
+    symbolic links are typically not supported, so this is not a concern.
+    
     Args:
         path: File or directory path to check
     
