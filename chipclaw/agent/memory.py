@@ -3,7 +3,7 @@ ChipClaw Memory System
 Manages long-term memory (MEMORY.md) and daily notes (YYYY-MM-DD.md)
 """
 import os
-from ..utils import ensure_dir, today_date
+from ..utils import ensure_dir, today_date, file_exists
 
 
 class MemoryStore:
@@ -22,7 +22,7 @@ class MemoryStore:
             String content or empty string if file doesn't exist
         """
         path = self.memory_dir + "/MEMORY.md"
-        if os.path.exists(path):
+        if file_exists(path):
             try:
                 with open(path, 'r') as f:
                     return f.read()
@@ -54,7 +54,7 @@ class MemoryStore:
         """
         date = today_date()
         path = f"{self.memory_dir}/{date}.md"
-        if os.path.exists(path):
+        if file_exists(path):
             try:
                 with open(path, 'r') as f:
                     return f.read()
@@ -104,7 +104,7 @@ class MemoryStore:
             date = f"{t[0]:04d}-{t[1]:02d}-{t[2]:02d}"
             
             path = f"{self.memory_dir}/{date}.md"
-            if os.path.exists(path):
+            if file_exists(path):
                 try:
                     with open(path, 'r') as f:
                         content = f.read()

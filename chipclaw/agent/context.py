@@ -3,7 +3,7 @@ ChipClaw Context Builder
 Assembles system prompt from bootstrap + memory + skills
 """
 import os
-from ..utils import format_runtime_info
+from ..utils import format_runtime_info, file_exists
 
 
 class ContextBuilder:
@@ -17,7 +17,7 @@ class ContextBuilder:
     def _load_bootstrap_file(self, filename):
         """Load a bootstrap markdown file from workspace"""
         path = f"{self.workspace}/{filename}"
-        if os.path.exists(path):
+        if file_exists(path):
             try:
                 with open(path, 'r') as f:
                     return f.read().strip()

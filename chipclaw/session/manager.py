@@ -4,7 +4,7 @@ Manages conversation sessions with JSONL storage
 """
 import os
 import json
-from ..utils import ensure_dir, safe_filename
+from ..utils import ensure_dir, safe_filename, file_exists
 
 
 class Session:
@@ -98,7 +98,7 @@ class SessionManager:
         session = Session(key)
         path = f"{self.sessions_dir}/{safe_filename(key)}.jsonl"
         
-        if os.path.exists(path):
+        if file_exists(path):
             try:
                 with open(path, 'r') as f:
                     for line in f:
@@ -123,7 +123,7 @@ class SessionManager:
             del self.sessions[key]
         
         path = f"{self.sessions_dir}/{safe_filename(key)}.jsonl"
-        if os.path.exists(path):
+        if file_exists(path):
             try:
                 os.remove(path)
             except Exception as e:

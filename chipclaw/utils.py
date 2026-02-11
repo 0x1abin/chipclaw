@@ -5,6 +5,29 @@ import os
 import time
 
 
+def file_exists(path):
+    """
+    Check if a file or directory exists (MicroPython compatible)
+    
+    In MicroPython, os.path module is not available, so we use os.stat
+    which raises OSError if the file doesn't exist.
+    
+    Note: This follows symbolic links. In MicroPython/ESP32 environments,
+    symbolic links are typically not supported, so this is not a concern.
+    
+    Args:
+        path: File or directory path to check
+    
+    Returns:
+        True if file/directory exists, False otherwise
+    """
+    try:
+        os.stat(path)
+        return True
+    except OSError:
+        return False
+
+
 def ensure_dir(path):
     """Create directory if it doesn't exist"""
     try:
