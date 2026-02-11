@@ -50,16 +50,16 @@ Edit `config.json`:
 
 ### 3. Upload Files to ESP32
 
-Use `ampy`, `rshell`, or Thonny IDE to upload the entire repository to your ESP32-S3:
+Use `mpremote` to upload the entire repository to your ESP32-S3:
 
 ```bash
-# Using ampy
-ampy --port /dev/ttyUSB0 put boot.py
-ampy --port /dev/ttyUSB0 put main.py
-ampy --port /dev/ttyUSB0 put config.json
-ampy --port /dev/ttyUSB0 put chipclaw
-ampy --port /dev/ttyUSB0 put workspace
-ampy --port /dev/ttyUSB0 put data
+# Using mpremote
+mpremote connect /dev/ttyUSB0 fs cp boot.py :boot.py
+mpremote connect /dev/ttyUSB0 fs cp main.py :main.py
+mpremote connect /dev/ttyUSB0 fs cp config.json :config.json
+mpremote connect /dev/ttyUSB0 fs cp -r chipclaw :chipclaw
+mpremote connect /dev/ttyUSB0 fs cp -r workspace :workspace
+mpremote connect /dev/ttyUSB0 fs cp -r data :data
 ```
 
 ### 4. Run ChipClaw
