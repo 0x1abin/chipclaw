@@ -1,0 +1,42 @@
+{
+  "agent": {
+    "workspace": "/workspace",
+    "data_dir": "/data",
+    "model": "deepseek-chat",
+    "max_tokens": 4096,
+    "temperature": 0.7,
+    "max_tool_iterations": 15,
+    "max_session_messages": 20
+  },
+  "provider": {
+    "api_key": "",
+    "api_base": "https://api.deepseek.com/v1"
+  },
+  "channels": {
+    "mqtt": {
+      "enabled": false,
+      "broker": "192.168.1.1",
+      "port": 1883,
+      "client_id": "chipclaw-01",
+      "topic_in": "chipclaw/in",
+      "topic_out": "chipclaw/out",
+      "username": "",
+      "password": ""
+    },
+    "uart": {
+      "enabled": true,
+      "uart_id": 1,
+      "baudrate": 115200,
+      "tx_pin": 17,
+      "rx_pin": 18
+    }
+  },
+  "hardware": {
+    "led_pin": 2,
+    "restrict_to_workspace": true
+  },
+  "wifi": {
+    "ssid": "",
+    "password": ""
+  }
+}
