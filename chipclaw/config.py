@@ -3,6 +3,7 @@ ChipClaw Configuration Loader
 """
 import json
 import os
+from .utils import file_exists
 
 
 class Config:
@@ -59,7 +60,7 @@ class Config:
         """Load JSON and deep-merge with defaults"""
         result = self._deep_copy(self.DEFAULTS)
         
-        if os.path.exists(path):
+        if file_exists(path):
             try:
                 with open(path) as f:
                     user_config = json.load(f)

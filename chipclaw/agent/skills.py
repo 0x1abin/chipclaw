@@ -3,6 +3,7 @@ ChipClaw Skills Loader
 Loads and manages skill documents with frontmatter parsing
 """
 import os
+from ..utils import file_exists
 
 
 class SkillsManager:
@@ -24,12 +25,12 @@ class SkillsManager:
         skills = []
         
         # User skills
-        if os.path.exists(self.user_skills_dir):
+        if file_exists(self.user_skills_dir):
             try:
                 for item in os.listdir(self.user_skills_dir):
                     skill_path = f"{self.user_skills_dir}/{item}"
                     skill_file = f"{skill_path}/SKILL.md"
-                    if os.path.exists(skill_file):
+                    if file_exists(skill_file):
                         skills.append(item)
             except Exception as e:
                 print(f"Error listing user skills: {e}")
@@ -50,7 +51,7 @@ class SkillsManager:
         # Try user skills first
         skill_path = f"{self.user_skills_dir}/{name}/SKILL.md"
         
-        if not os.path.exists(skill_path):
+        if not file_exists(skill_path):
             return None
         
         try:

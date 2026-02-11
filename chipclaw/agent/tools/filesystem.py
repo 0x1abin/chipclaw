@@ -3,7 +3,7 @@ ChipClaw Filesystem Tools
 """
 import os
 from .base import Tool
-from ...utils import ensure_dir, truncate_string
+from ...utils import ensure_dir, truncate_string, file_exists
 
 
 class ReadFileTool(Tool):
@@ -31,7 +31,7 @@ class ReadFileTool(Tool):
         if not path.startswith(self.allowed_dir):
             return f"Error: Access denied. Files must be within {self.allowed_dir}"
         
-        if not os.path.exists(path):
+        if not file_exists(path):
             return f"Error: File not found: {path}"
         
         try:
@@ -113,7 +113,7 @@ class ListDirTool(Tool):
         if not path.startswith(self.allowed_dir):
             return f"Error: Access denied. Path must be within {self.allowed_dir}"
         
-        if not os.path.exists(path):
+        if not file_exists(path):
             return f"Error: Directory not found: {path}"
         
         try:
