@@ -23,6 +23,9 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+/tmp/test_workspace/
+/tmp/test_data/
+*.pyc
 
 # Build artifacts
 build/

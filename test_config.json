@@ -1,0 +1,27 @@
+{
+  "agent": {
+    "workspace": "/tmp/test_workspace",
+    "data_dir": "/tmp/test_data",
+    "model": "test-model",
+    "max_tokens": 1024,
+    "temperature": 0.5,
+    "max_tool_iterations": 10,
+    "max_session_messages": 10
+  },
+  "provider": {
+    "api_key": "test-api-key-placeholder",
+    "api_base": "https://test.api.example.com/v1"
+  },
+  "channels": {
+    "mqtt": {
+      "enabled": false
+    },
+    "uart": {
+      "enabled": false
+    }
+  },
+  "hardware": {
+    "led_pin": 2,
+    "restrict_to_workspace": true
+  }
+}
