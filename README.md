@@ -1,5 +1,7 @@
 # ChipClaw
 
+[![Tests](https://github.com/0x1abin/chipclaw/workflows/Tests/badge.svg)](https://github.com/0x1abin/chipclaw/actions)
+
 **ChipClaw** is a lightweight AI agent framework for ESP32-S3 microcontrollers, porting the core architecture of [HKUDS/nanobot](https://github.com/HKUDS/nanobot) to MicroPython. It enables autonomous hardware control, self-programming capabilities, and multi-channel communication through MQTT and UART interfaces.
 
 ## Features
