@@ -52,7 +52,7 @@ class Config:
         }
     }
     
-    def __init__(self, config_path="/config.json"):
+    def __init__(self, config_path="config.json"):
         """Load configuration from JSON file with defaults"""
         self.data = self._load_with_defaults(config_path)
     

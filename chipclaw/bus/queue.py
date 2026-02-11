@@ -38,7 +38,6 @@ class Queue:
             event = asyncio.Event()
             self._putters.append(event)
             await event.wait()
-            self._putters.remove(event)
         
         self._queue.append(item)
         
@@ -65,7 +64,6 @@ class Queue:
             event = asyncio.Event()
             self._getters.append(event)
             await event.wait()
-            self._getters.remove(event)
         
         item = self._queue.pop(0)
         
