@@ -8,7 +8,7 @@
 - **Platform**: ESP32-S3
 - **Flash Memory**: 16MB
 - **PSRAM**: 8MB
-- **Runtime**: MicroPython (v1.20+)
+- **Runtime**: MicroPython (v1.21.0+)
 
 ### Relationship to Nanobot
 ChipClaw is a **port** of nanobot's core architecture, adapted for MicroPython and embedded constraints:

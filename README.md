@@ -18,7 +18,7 @@
 ## Hardware Requirements
 
 - **Microcontroller**: ESP32-S3 (16MB Flash, 8MB PSRAM)
-- **Firmware**: MicroPython v1.20 or later
+- **Firmware**: MicroPython v1.21.0 or later
 - **Network**: WiFi for LLM API access and MQTT
 - **Optional**: UART cable for serial communication
 

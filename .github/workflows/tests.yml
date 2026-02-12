@@ -65,10 +65,53 @@ jobs:
         find chipclaw -name "*.py" -exec python -m py_compile {} \;
         find tests -name "*.py" -exec python -m py_compile {} \;
 
+  test-micropython:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies for MicroPython build
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libffi-dev pkg-config git
+
+    - name: Clone and build MicroPython 1.21.0
+      run: |
+        cd /tmp
+        git clone https://github.com/micropython/micropython.git
+        cd micropython
+        git checkout v1.21.0
+        # Build mpy-cross (cross-compiler)
+        make -C mpy-cross
+        # Build Unix port
+        cd ports/unix
+        make submodules
+        make
+
+    - name: Run tests with MicroPython 1.21.0
+      run: |
+        # Add MicroPython to PATH
+        export PATH="/tmp/micropython/ports/unix:$PATH"
+        # Verify MicroPython version
+        micropython --version
+        # Run test suite
+        micropython tests/test_runner.py
+
+    - name: Test import main module with MicroPython
+      run: |
+        export PATH="/tmp/micropython/ports/unix:$PATH"
+        # Test basic imports
+        micropython -c "import sys; sys.path.insert(0, '.'); from chipclaw.config import Config; c = Config('./test_config.json'); print('Config loaded successfully')"
+        micropython -c "import sys; sys.path.insert(0, '.'); from chipclaw.utils import get_runtime_info; print('Utils imported successfully')"
+
   summary:
     runs-on: ubuntu-latest
     permissions: {}
-    needs: [test, lint]
+    needs: [test, lint, test-micropython]
     if: always()
     
     steps:
@@ -81,6 +124,10 @@ jobs:
         fi
         if [ "${{ needs.lint.result }}" != "success" ]; then
           echo "Linting failed!"
+          exit 1
+        fi
+        if [ "${{ needs.test-micropython.result }}" != "success" ]; then
+          echo "MicroPython tests failed!"
           exit 1
         fi
         echo "All checks passed!"
