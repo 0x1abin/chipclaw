@@ -88,23 +88,22 @@ jobs:
         echo "Building mpy-cross..."
         make -C mpy-cross
         
-        # Build Unix port of MicroPython
-        echo "Building Unix port..."
-        cd ports/unix
-        
-        # When building from tarball (not git clone), we need to work around submodule checks
-        # Create a minimal git repo to satisfy the build system's git requirements
-        cd ../..
+        # Initialize a minimal git repo to satisfy build system's git checks
+        # The MicroPython build system uses 'git' commands to check submodules
+        # When building from tarball (not git clone), we need to fake a git repo
+        echo "Initializing git repo for build system compatibility..."
         git init
         git config user.email "ci@example.com"
         git config user.name "CI Build"
         git add -A
         git commit -m "Initial commit from tarball" || true
         
-        # Now build the Unix port
+        # Build Unix port of MicroPython
+        echo "Building Unix port..."
         cd ports/unix
         # Try to get submodules, but don't fail if it doesn't work
-        make submodules || echo "Submodules not available, continuing with tarball contents..."
+        # (tarball may already include necessary files)
+        make submodules || echo "⚠ Submodules not available, continuing with tarball contents..."
         make
         
         # Install to custom directory
