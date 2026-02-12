@@ -43,8 +43,8 @@ This project has successfully implemented a comprehensive testing framework and 
 ### 3. CI/CD 自动化 (CI/CD Automation)
 
 - **平台**: GitHub Actions
-- **工作流**: `.github/workflows/tests.yml`
-- **测试环境**: Python 3.9, 3.10, 3.11
+- **工作流**: `.github/workflows/micropython-tests.yml`
+- **测试环境**: MicroPython 1.21.0 (Unix port)
 - **触发条件**:
   - Push 到 main/master/develop 分支
   - Pull Request
@@ -52,8 +52,8 @@ This project has successfully implemented a comprehensive testing framework and 
 - **安全性**: 已配置适当的权限限制
 
 **Platform**: GitHub Actions
-**Workflow**: `.github/workflows/tests.yml`
-**Test Environments**: Python 3.9, 3.10, 3.11
+**Workflow**: `.github/workflows/micropython-tests.yml`
+**Test Environment**: MicroPython 1.21.0 (Unix port)
 **Triggers**:
 - Push to main/master/develop branches
 - Pull Requests
@@ -158,7 +158,7 @@ GitHub Actions automatically runs tests when:
 chipclaw/
 ├── .github/
 │   └── workflows/
-│       └── tests.yml          # CI 工作流配置
+│       └── micropython-tests.yml  # MicroPython CI 工作流配置
 ├── tests/
 │   ├── __init__.py            # 测试框架核心
 │   ├── test_runner.py         # 测试运行器

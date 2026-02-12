@@ -59,7 +59,7 @@ jobs:
         
         # Try to install micropython-1.21.0
         echo "Attempting to install micropython-1.21.0 via pyenv..."
-        pyenv install micropython-1.21.0 || exit 1
+        pyenv install --skip-existing micropython-1.21.0 || exit 1
         pyenv global micropython-1.21.0
         
         # Verify installation
