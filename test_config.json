@@ -1,7 +1,6 @@
 {
   "agent": {
     "workspace": "/tmp/test_workspace",
-    "data_dir": "/tmp/test_data",
     "model": "test-model",
     "max_tokens": 1024,
     "temperature": 0.5,

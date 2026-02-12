@@ -39,7 +39,7 @@ async def main():
     
     # Initialize session manager
     print("Initializing session manager...")
-    sessions = SessionManager(config.data_dir)
+    sessions = SessionManager(config.workspace)
     
     # Initialize agent
     print("Initializing agent...")
