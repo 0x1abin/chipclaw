@@ -65,7 +65,6 @@ mpremote fs cp main.py :main.py
 mpremote fs cp config.json :config.json
 mpremote fs cp -r chipclaw :chipclaw
 mpremote fs cp -r workspace :workspace
-mpremote fs cp -r data :data
 ```
 
 ### 4. Run ChipClaw
@@ -118,12 +117,11 @@ See [docs/DESIGN.md](docs/DESIGN.md) for the complete architecture design docume
 │   │   └── tools/             # Tool implementations
 │   ├── channels/              # Communication channels
 │   └── session/               # Session management
-├── workspace/                 # User workspace
-│   ├── IDENTITY.md            # Agent identity
-│   ├── AGENTS.md              # Behavior guidelines
-│   ├── memory/                # Memory storage
-│   └── skills/                # Skills library
-└── data/                      # Runtime data
+└── workspace/                 # User workspace
+    ├── IDENTITY.md            # Agent identity
+    ├── AGENTS.md              # Behavior guidelines
+    ├── memory/                # Memory storage
+    ├── skills/                # Skills library
     └── sessions/              # Conversation history
 ```
 

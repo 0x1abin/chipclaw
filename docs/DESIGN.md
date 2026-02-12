@@ -95,11 +95,9 @@ ChipClaw's filesystem layout mirrors nanobot's workspace structure while adaptin
 │   ├── memory/                      # Memory storage (mirrors ~/.nanobot/workspace/memory/)
 │   │   ├── MEMORY.md                # Long-term memory (created at runtime)
 │   │   └── YYYY-MM-DD.md            # Daily notes (created at runtime)
-│   └── skills/                      # User skills (override builtin, mirrors ~/.nanobot/workspace/skills/)
-│       └── hardware/                # Hardware control skill
-│           └── SKILL.md             # GPIO, I2C, PWM, ADC + self-programming examples
-│
-├── data/                            # Runtime data (mirrors ~/.nanobot/)
+│   ├── skills/                      # User skills (override builtin, mirrors ~/.nanobot/workspace/skills/)
+│   │   └── hardware/                # Hardware control skill
+│   │       └── SKILL.md             # GPIO, I2C, PWM, ADC + self-programming examples
 │   └── sessions/                    # Session files (mirrors ~/.nanobot/sessions/)
 │       └── {session_key}.jsonl      # JSONL conversation history
 │
@@ -111,7 +109,7 @@ ChipClaw's filesystem layout mirrors nanobot's workspace structure while adaptin
 |--------|---------|----------|
 | Config location | `~/.nanobot/config.toml` | `/config.json` (Flash root) |
 | Workspace | `~/.nanobot/workspace/` | `/workspace/` |
-| Sessions | `~/.nanobot/sessions/` | `/data/sessions/` |
+| Sessions | `~/.nanobot/sessions/` | `/workspace/sessions/` |
 | Config format | TOML (Pydantic) | JSON (plain dict) |
 | Paths | `pathlib.Path` | String paths + `os` module |
 
@@ -805,8 +803,8 @@ class Session:
         self.messages = []
 
 class SessionManager:
-    def __init__(self, data_dir):
-        self.data_dir = data_dir
+    def __init__(self, workspace):
+        self.workspace = workspace
         self.sessions = {}  # {key: Session}
     
     def get_or_create(self, key):
@@ -817,14 +815,14 @@ class SessionManager:
     
     def save(self, session):
         """Save session to JSONL file"""
-        path = f"{self.data_dir}/sessions/{safe_filename(session.key)}.jsonl"
+        path = f"{self.workspace}/sessions/{safe_filename(session.key)}.jsonl"
         with open(path, "w") as f:
             for msg in session.messages:
                 f.write(json.dumps(msg) + "\n")
     
     def _load(self, key):
         """Load session from JSONL file"""
-        path = f"{self.data_dir}/sessions/{safe_filename(key)}.jsonl"
+        path = f"{self.workspace}/sessions/{safe_filename(key)}.jsonl"
         session = Session(key)
         if os.path.exists(path):
             with open(path, "r") as f:
@@ -878,10 +876,6 @@ class Config:
     @property
     def workspace(self):
         return self.get("agent", "workspace")
-    
-    @property
-    def data_dir(self):
-        return self.get("agent", "data_dir")
 ```
 
 ---
@@ -969,7 +963,7 @@ async def main():
         api_key=config.get("provider", "api_key"),
         api_base=config.get("provider", "api_base")
     )
-    sessions = SessionManager(config.data_dir)
+    sessions = SessionManager(config.workspace)
     agent = AgentLoop(bus, provider, sessions, config)
     
     # Initialize channels
@@ -1133,7 +1127,7 @@ uasyncio.run(main())
 **Mitigations**:
 - Limit in-memory history to 20 messages
 - Agent can use `write_file()` tool to archive old sessions
-- User can manually clear `/data/sessions/`
+- User can manually clear `/workspace/sessions/`
 
 ---
 

@@ -30,12 +30,6 @@ def test_config_workspace_property():
     assert config.workspace == "/workspace"
 
 
-def test_config_data_dir_property():
-    """Test data_dir property"""
-    config = Config(config_path="/nonexistent_test_config.json")
-    assert config.data_dir == "/data"
-
-
 def test_config_nested_get():
     """Test nested configuration access"""
     config = Config(config_path="/nonexistent_test_config.json")

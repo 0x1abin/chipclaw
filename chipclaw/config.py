@@ -12,7 +12,6 @@ class Config:
     DEFAULTS = {
         "agent": {
             "workspace": "/workspace",
-            "data_dir": "/data",
             "model": "deepseek-chat",
             "max_tokens": 4096,
             "temperature": 0.7,
@@ -107,8 +106,4 @@ class Config:
     def workspace(self):
         """Get workspace directory path"""
         return self.get("agent", "workspace", default="/workspace")
-    
-    @property
-    def data_dir(self):
-        """Get data directory path"""
-        return self.get("agent", "data_dir", default="/data")
+

@@ -50,9 +50,9 @@ class Session:
 class SessionManager:
     """Manages sessions with JSONL file storage"""
     
-    def __init__(self, data_dir):
-        self.data_dir = data_dir
-        self.sessions_dir = f"{data_dir}/sessions"
+    def __init__(self, workspace):
+        self.workspace = workspace
+        self.sessions_dir = f"{workspace}/sessions"
         ensure_dir(self.sessions_dir)
         self.sessions = {}  # {key: Session}
     
