@@ -16,7 +16,6 @@ from .tools.registry import ToolRegistry
 from .tools.filesystem import ReadFileTool, WriteFileTool, ListDirTool
 from .tools.hardware import GPIOTool, I2CScanTool
 from .tools.exec_mpy import ExecMicroPythonTool
-from .tools.http_fetch import HTTPFetchTool
 from .tools.curl import CurlTool
 from .tools.message import MessageTool
 
@@ -66,7 +65,6 @@ class AgentLoop:
         self.tools.register(ExecMicroPythonTool(workspace=workspace))
         
         # HTTP
-        self.tools.register(HTTPFetchTool())
         self.tools.register(CurlTool())
         
         # Message tool

@@ -167,7 +167,7 @@ ChipClaw provides the following tools to the LLM:
 4. **gpio** - GPIO operations (read, write, pwm, adc)
 5. **i2c_scan** - Scan I2C bus for devices
 6. **exec_micropython** - Execute MicroPython code
-7. **http_fetch** - HTTP GET requests
+7. **curl** - HTTP requests (GET, POST, PUT, DELETE, PATCH)
 8. **send_message** - Send messages to channels
 
 ## Memory Management
