@@ -63,7 +63,8 @@ jobs:
         pyenv global micropython-1.21.0
         
         # Verify installation
-        micropython --version
+        # Note: MicroPython doesn't support --version flag, use a simple test instead
+        micropython -c "import sys; print('MicroPython', sys.version)"
         
         # Mark success
         echo "MICROPYTHON_INSTALL_METHOD=pyenv" >> $GITHUB_ENV
@@ -111,7 +112,8 @@ jobs:
         chmod +x "$MICROPYTHON_DIR/micropython"
         
         # Verify installation
-        "$MICROPYTHON_DIR/micropython" --version
+        # Note: MicroPython doesn't support --version flag, use a simple test instead
+        "$MICROPYTHON_DIR/micropython" -c "import sys; print('MicroPython', sys.version)"
         
         # Set environment variables
         echo "MICROPYTHON_INSTALL_METHOD=source" >> $GITHUB_ENV
@@ -121,7 +123,8 @@ jobs:
       run: |
         echo "MicroPython installation method: $MICROPYTHON_INSTALL_METHOD"
         echo "MicroPython path: $MICROPYTHON_PATH"
-        $MICROPYTHON_PATH --version
+        # Note: MicroPython doesn't support --version flag, use a simple test instead
+        $MICROPYTHON_PATH -c "import sys; print('MicroPython version:', sys.version)"
         
         # Test basic functionality
         $MICROPYTHON_PATH -c "print('MicroPython is working!')"
