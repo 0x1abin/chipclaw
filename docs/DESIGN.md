@@ -19,13 +19,35 @@ ChipClaw is a **port** of nanobot's core architecture, adapted for MicroPython a
 - Removes desktop-specific features (terminal UI, subprocess execution)
 
 ### Key Features
-- **Multi-channel I/O**: MQTT (wireless) and UART (serial) communication
+- **Multi-channel I/O**: MQTT (wireless) and UART REPL CLI (serial) communication
 - **LLM Integration**: OpenAI-compatible API calls via HTTPS
-- **Tool System**: Filesystem, hardware control, HTTP fetch, self-programming
+- **Tool System**: Filesystem, hardware control, HTTP fetch, self-programming via `exec()`/`eval()`
 - **Memory System**: Long-term memory (MEMORY.md) and daily notes
-- **Skills Framework**: Markdown-based skill documents with frontmatter
+- **Skills Framework**: Markdown-based skill documents with built-in MicroPython peripheral APIs
 - **Session Management**: JSONL-based conversation history
-- **Self-Programming**: Execute MicroPython code via `exec()`
+- **Self-Programming**: Execute MicroPython code via `exec()` (not shell commands)
+
+### Architecture Diagram
+
+<p align="center">
+  <img src="chipclaw_arch.png" alt="ChipClaw Architecture" width="800">
+</p>
+
+**Key Architecture Highlights**:
+
+1. **Channel Layer**: MQTT and UART REPL CLI channels (replacing terminal/Telegram from nanobot)
+2. **Message Bus**: `uasyncio.Queue`-based asynchronous event routing
+3. **Agent Core**: Agent Loop, Context Builder, and LLM Provider working together
+4. **Tool System**: 
+   - `exec_micropython`: MicroPython code execution via `exec()`/`eval()` (not shell commands)
+   - `hardware`: Direct GPIO, I2C, PWM, ADC peripheral access
+   - `filesystem`: File operations
+   - `http_fetch`: HTTP requests
+   - `send_message`: Channel communication
+5. **Data Storage**: 
+   - Memory system for long-term knowledge
+   - Skills library with built-in MicroPython peripheral API documentation
+   - Session manager for conversation history
 
 ---
 

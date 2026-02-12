@@ -83,17 +83,27 @@ ChipClaw will start and listen on UART by default. Send messages and interact!
 
 ## Architecture
 
+<p align="center">
+  <img src="docs/chipclaw_arch.png" alt="ChipClaw Architecture" width="800">
+</p>
+
 ChipClaw mirrors nanobot's architecture while adapting for embedded constraints:
 
+- **Channels**: MQTT (wireless) and UART REPL CLI (serial) - no shell commands
 - **Message Bus**: `uasyncio.Queue`-based event routing
-- **LLM Provider**: OpenAI-compatible API via `urequests`
 - **Agent Loop**: Message → LLM → Tools → Response cycle
+- **LLM Provider**: OpenAI-compatible API via `urequests`
 - **Context Builder**: System prompt from bootstrap + memory + skills
-- **Memory System**: MEMORY.md + daily notes (YYYY-MM-DD.md)
-- **Skills Loader**: Frontmatter-parsed markdown documents
-- **Tool Registry**: Filesystem, hardware, exec, HTTP fetch, messaging
-- **Channels**: MQTT (wireless), UART (serial)
-- **Session Manager**: JSONL conversation history
+- **Tool System**: 
+  - **exec_micropython**: Execute code via MicroPython `exec()`/`eval()` (not shell commands)
+  - **hardware**: GPIO, I2C, PWM, ADC control
+  - **filesystem**: read_file, write_file, list_dir
+  - **http_fetch**: HTTP GET requests
+  - **send_message**: Send messages to channels
+- **Data Storage**:
+  - **Memory System**: MEMORY.md + daily notes (YYYY-MM-DD.md)
+  - **Skills Library**: Built-in MicroPython peripheral API skills (GPIO, I2C, PWM, etc.)
+  - **Session Manager**: JSONL conversation history
 
 See [docs/DESIGN.md](docs/DESIGN.md) for the complete architecture design document.
 
