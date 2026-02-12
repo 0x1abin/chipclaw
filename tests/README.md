@@ -116,7 +116,7 @@ Tests run automatically on GitHub Actions for:
 - Every pull request
 - Manual workflow dispatch
 
-The CI pipeline tests against multiple Python versions (3.9, 3.10, 3.11).
+The CI pipeline tests using MicroPython 1.21.0 (Unix port) to ensure compatibility with the target platform.
 
 ## Test Coverage
 

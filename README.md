@@ -224,11 +224,9 @@ python main.py
 ### Continuous Integration
 
 The project uses GitHub Actions for automated testing:
-- **Python Tests**: Tests run on Python 3.9, 3.10, and 3.11
 - **MicroPython Tests**: Tests run on MicroPython 1.21.0 (Unix port)
   - Uses pyenv for installation (falls back to building from source if needed)
   - Ensures compatibility with the target MicroPython version
-- Syntax checking for all Python files
 - Runs on every push and pull request
 
 ### Resource Analysis
