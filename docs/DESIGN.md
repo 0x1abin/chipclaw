@@ -72,7 +72,7 @@ ChipClaw's filesystem layout mirrors nanobot's workspace structure while adaptin
 │   │       ├── message.py           # Send message to channel
 │   │       ├── hardware.py          # GPIO, I2C, PWM, ADC
 │   │       ├── exec_mpy.py          # exec() MicroPython code (no shell)
-│   │       └── http_fetch.py        # HTTP GET tool
+│   │       └── curl.py               # HTTP client tool (GET/POST/PUT/DELETE/PATCH)
 │   │
 │   ├── skills/                      # Built-in skills (bundled with package)
 │   │   ├── __init__.py
@@ -610,11 +610,12 @@ code = "import my_module; my_module.run()"
 - Intentionally **not sandboxed** (agent has full control)
 - For complex logic, prefer creating `.py` files and importing them
 
-#### `http_fetch.py` — HTTP GET
-**Tool**: **HTTPFetchTool**
-- Params: `url` (string)
-- Returns: response body (truncated to 4KB)
-- Uses `urequests.get()`
+#### `curl.py` — HTTP Client
+**Tool**: **CurlTool**
+- Params: `url` (string), `method` (string, default: GET), `headers` (object), `data` (string)
+- Supports GET, POST, PUT, DELETE, PATCH methods
+- Returns: formatted response with status, headers, and body (truncated to 4KB)
+- Uses `urequests`
 
 #### `message.py` — Send Message
 **Tool**: **MessageTool**
@@ -1032,7 +1033,7 @@ uasyncio.run(main())
 - [ ] `chipclaw/agent/tools/filesystem.py` — File ops
 - [ ] `chipclaw/agent/tools/hardware.py` — GPIO/I2C
 - [ ] `chipclaw/agent/tools/exec_mpy.py` — Self-programming
-- [ ] `chipclaw/agent/tools/http_fetch.py` — HTTP GET
+- [ ] `chipclaw/agent/tools/curl.py` — HTTP client
 - [ ] `chipclaw/agent/tools/message.py` — Message tool
 - [ ] Tool integration tests
 
