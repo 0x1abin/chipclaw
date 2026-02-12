@@ -11,7 +11,7 @@ class ExecMicroPythonTool(Tool):
     """Execute MicroPython code with stdout capture"""
     
     name = "exec_micropython"
-    description = "Execute MicroPython code and return output. Use for hardware automation and self-programming."
+    description = "Execute MicroPython code and return output. Use for hardware control, automation, and self-programming. For complex logic, create a .py file with write_file and import it here."
     parameters = {
         "type": "object",
         "properties": {

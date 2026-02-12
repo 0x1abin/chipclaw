@@ -74,6 +74,24 @@ i2c_scan(scl=22, sda=21)
 gpio(pin=5, mode="pwm", value=768, freq=1000)
 ```
 
+## Self-Programming via exec_micropython
+
+ESP32 MicroPython has no shell commands. All code runs via `exec_micropython` or by creating `.py` files and importing them.
+
+### Direct Execution
+```json
+{"name": "exec_micropython", "params": {"code": "from machine import Pin; Pin(2, Pin.OUT).on(); print('LED on')"}}
+```
+
+### Create and Import a Module
+```json
+{"name": "write_file", "params": {"path": "led_ctrl.py", "content": "from machine import Pin\n\ndef blink(pin=2, times=3):\n    import time\n    p = Pin(pin, Pin.OUT)\n    for _ in range(times):\n        p.on(); time.sleep(0.5)\n        p.off(); time.sleep(0.5)\n    print('Blink done')\n"}}
+```
+Then run it:
+```json
+{"name": "exec_micropython", "params": {"code": "import led_ctrl; led_ctrl.blink()"}}
+```
+
 ## Pin Reference (ESP32-S3)
 
 - **GPIO 2**: Built-in LED (OUTPUT)

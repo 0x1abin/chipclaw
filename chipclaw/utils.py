@@ -36,14 +36,14 @@ def ensure_dir(path):
     if file_exists(path):
         return
     
-    # Split path into components
+    # Split path into components, preserving absolute path prefix
     parts = path.strip('/').split('/')
-    current = ''
+    current = '/' if path.startswith('/') else ''
     
     for part in parts:
         if not part:
             continue
-        current = current + '/' + part if current else part
+        current = current + part if current.endswith('/') else (current + '/' + part if current else part)
         
         # Try to create directory if it doesn't exist
         if not file_exists(current):
