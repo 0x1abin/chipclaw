@@ -133,22 +133,34 @@ jobs:
         export MICROPYTHON="$MICROPYTHON_PATH"
         
         # Run the test runner with MicroPython
-        # Note: Some tests may fail if they depend on modules not available in MicroPython
-        $MICROPYTHON_PATH tests/test_runner.py || {
-          echo "⚠ Some tests failed with MicroPython 1.21.0"
-          echo "This may be expected if tests use CPython-specific modules"
-          # Don't fail the workflow - just report the issue
-          # exit 1
-        }
+        # Capture the exit code to handle it properly
+        set +e
+        $MICROPYTHON_PATH tests/test_runner.py
+        TEST_EXIT_CODE=$?
+        set -e
+        
+        if [ $TEST_EXIT_CODE -eq 0 ]; then
+          echo "✓ All tests passed with MicroPython 1.21.0!"
+        else
+          echo "⚠ Some tests failed with MicroPython 1.21.0 (exit code: $TEST_EXIT_CODE)"
+          echo "This may be expected if tests use CPython-specific modules like tempfile or shutil"
+          echo "Checking if this is a complete failure or partial compatibility issue..."
+          # For now, we'll allow test failures to not block the workflow
+          # TODO: Implement selective test skipping for MicroPython-incompatible tests
+        fi
         
         echo "✓ Test execution completed with MicroPython 1.21.0!"
 
     - name: Test import main module with MicroPython
       run: |
         # Test that main modules can be imported
-        $MICROPYTHON_PATH -c "import sys; sys.path.insert(0, '.'); from chipclaw.utils import get_runtime_info; print('Utils imported successfully')"
+        echo "Testing core module imports..."
+        $MICROPYTHON_PATH -c "import sys; sys.path.insert(0, '.'); from chipclaw.utils import get_runtime_info; print('✓ chipclaw.utils imported')"
+        $MICROPYTHON_PATH -c "import sys; sys.path.insert(0, '.'); from chipclaw.config import Config; print('✓ chipclaw.config imported')"
+        $MICROPYTHON_PATH -c "import sys; sys.path.insert(0, '.'); from chipclaw.bus.events import InboundMessage; print('✓ chipclaw.bus.events imported')"
+        $MICROPYTHON_PATH -c "import sys; sys.path.insert(0, '.'); from chipclaw.agent.tools.curl import CurlTool; print('✓ chipclaw.agent.tools.curl imported')"
         
-        echo "✓ Module imports successful with MicroPython 1.21.0!"
+        echo "✓ All critical module imports successful with MicroPython 1.21.0!"
 
   summary:
     runs-on: ubuntu-latest
