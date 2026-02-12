@@ -49,14 +49,14 @@ spi = SPI(1, baudrate=1000000, polarity=0, phase=0,
           sck=Pin(18), mosi=Pin(23), miso=Pin(19))
 
 # Write bytes
-spi.write(b'\\x01\\x02')
+spi.write(b'\x01\x02')
 
 # Read bytes
 buf = bytearray(4)
 spi.readinto(buf)
 
 # Write and read simultaneously
-tx = b'\\x00\\x00'
+tx = b'\x00\x00'
 rx = bytearray(2)
 spi.write_readinto(tx, rx)
 print("SPI RX:", rx)
@@ -70,7 +70,7 @@ spi = SPI(1, baudrate=1000000, sck=Pin(18), mosi=Pin(23), miso=Pin(19))
 cs = Pin(5, Pin.OUT)
 
 cs.off()  # Select device
-spi.write(b'\\x9F')  # Send command
+spi.write(b'\x9F')  # Send command
 device_id = spi.read(3)  # Read response
 cs.on()  # Deselect
 print("Device ID:", device_id)
@@ -220,19 +220,19 @@ devices = i2c.scan()
 print("I2C devices:", [hex(d) for d in devices])
 
 # Write to device
-i2c.writeto(0x48, b'\\x00')
+i2c.writeto(0x48, b'\x00')
 
 # Read from device
 data = i2c.readfrom(0x48, 2)
 print("Read:", data)
 
 # Write then read (register access)
-i2c.writeto(0x48, b'\\x01')       # Set register
+i2c.writeto(0x48, b'\x01')       # Set register
 data = i2c.readfrom(0x48, 2)      # Read value
 print("Register value:", data)
 
 # Memory read/write (for EEPROM, etc.)
-i2c.writeto_mem(0x50, 0x00, b'\\x42')   # Write to address 0x00
+i2c.writeto_mem(0x50, 0x00, b'\x42')   # Write to address 0x00
 val = i2c.readfrom_mem(0x50, 0x00, 1)   # Read from address 0x00
 ```
 
