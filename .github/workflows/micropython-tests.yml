@@ -124,7 +124,7 @@ jobs:
         echo "MicroPython installation method: $MICROPYTHON_INSTALL_METHOD"
         echo "MicroPython path: $MICROPYTHON_PATH"
         # Note: MicroPython doesn't support --version flag, use a simple test instead
-        $MICROPYTHON_PATH -c "import sys; print('MicroPython version:', sys.version)"
+        $MICROPYTHON_PATH -c "import sys; print('MicroPython', sys.version)"
         
         # Test basic functionality
         $MICROPYTHON_PATH -c "print('MicroPython is working!')"
