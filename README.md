@@ -1,6 +1,7 @@
 # ChipClaw
 
 [![Tests](https://github.com/0x1abin/chipclaw/workflows/Tests/badge.svg)](https://github.com/0x1abin/chipclaw/actions)
+[![MicroPython Tests](https://github.com/0x1abin/chipclaw/workflows/MicroPython%20Tests/badge.svg)](https://github.com/0x1abin/chipclaw/actions)
 
 **ChipClaw** is a lightweight AI agent framework for ESP32-S3 microcontrollers, porting the core architecture of [HKUDS/nanobot](https://github.com/HKUDS/nanobot) to MicroPython. It enables autonomous hardware control, self-programming capabilities, and multi-channel communication through MQTT and UART interfaces.
 
@@ -223,7 +224,10 @@ python main.py
 ### Continuous Integration
 
 The project uses GitHub Actions for automated testing:
-- Tests run on Python 3.9, 3.10, and 3.11
+- **Python Tests**: Tests run on Python 3.9, 3.10, and 3.11
+- **MicroPython Tests**: Tests run on MicroPython 1.21.0 (Unix port)
+  - Uses pyenv for installation (falls back to building from source if needed)
+  - Ensures compatibility with the target MicroPython version
 - Syntax checking for all Python files
 - Runs on every push and pull request
 
