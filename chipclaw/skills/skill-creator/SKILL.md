@@ -93,7 +93,7 @@ Follow these steps in order, skipping only if clearly not applicable.
 
 ### Skill Naming
 
-- Use lowercase letters, digits, and hyphens only; normalize titles to hyphen-case (e.g., "Servo Control" -> `servo-control`)
+- Use lowercase letters, digits, and hyphens only; normalize titles to hyphen-case (e.g., "ServoControl" -> `servo-control`, "Temp_Sensor" -> `temp-sensor`)
 - Keep names under 64 characters
 - Prefer short, descriptive phrases (e.g., `i2c-sensors`, `neopixel-control`, `motor-driver`)
 - Name the skill folder exactly after the skill name
@@ -224,7 +224,7 @@ Hardware precautions and constraints.
 
 **Guidelines:**
 
-- Use code blocks with proper syntax highlighting (```python)
+- Use code blocks with proper syntax highlighting (```python for MicroPython code)
 - Include actual runnable MicroPython code, not pseudocode
 - Show both simple and complex patterns
 - Document pin numbers, addresses, timing requirements
@@ -315,7 +315,7 @@ See: `chipclaw/skills/peripheral_api/SKILL.md`
 
 ### Hardware Control Skill
 
-The `hardware_control` skill shows a user skill pattern:
+The `hardware` skill shows a user skill pattern:
 
 - Focused on GPIO, I2C, PWM, ADC
 - JSON tool call examples
