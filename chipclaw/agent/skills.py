@@ -12,34 +12,81 @@ class SkillsManager:
     def __init__(self, workspace):
         self.workspace = workspace
         self.user_skills_dir = workspace + "/skills"
-        # Could add builtin skills directory later if needed
-        self.builtin_skills_dir = None
+        # Built-in skills bundled with chipclaw package
+        self.builtin_skills_dir = self._find_builtin_skills_dir()
     
-    def list_skills(self):
+    def _find_builtin_skills_dir(self):
         """
-        List all available skills (user + builtin)
+        Locate the built-in skills directory relative to the chipclaw package.
+        Works on both ESP32 (absolute paths) and CPython (relative paths).
+        
+        Returns:
+            Path string to builtin skills dir, or None if not found
+        """
+        # Determine path relative to this file: chipclaw/agent/skills.py
+        # Built-in skills are at: chipclaw/skills/
+        try:
+            # Go up from chipclaw/agent/ to chipclaw/, then into skills/
+            agent_dir = __file__.rsplit('/', 1)[0] if '/' in __file__ else '.'
+            package_dir = agent_dir.rsplit('/', 1)[0] if '/' in agent_dir else '.'
+            builtin_dir = package_dir + "/skills"
+            if file_exists(builtin_dir):
+                return builtin_dir
+        except Exception:
+            pass
+        return None
+    
+    def _list_skills_in_dir(self, skills_dir):
+        """
+        List skill names in a given directory.
+        
+        Args:
+            skills_dir: Path to skills directory
         
         Returns:
             List of skill names (directory names)
         """
         skills = []
-        
-        # User skills
-        if file_exists(self.user_skills_dir):
+        if skills_dir and file_exists(skills_dir):
             try:
-                for item in os.listdir(self.user_skills_dir):
-                    skill_path = f"{self.user_skills_dir}/{item}"
+                for item in os.listdir(skills_dir):
+                    skill_path = f"{skills_dir}/{item}"
                     skill_file = f"{skill_path}/SKILL.md"
                     if file_exists(skill_file):
                         skills.append(item)
             except Exception as e:
-                print(f"Error listing user skills: {e}")
+                print(f"Error listing skills in {skills_dir}: {e}")
+        return skills
+    
+    def list_skills(self):
+        """
+        List all available skills (user + builtin).
+        User skills override builtin skills with the same name.
+        
+        Returns:
+            List of skill names (directory names)
+        """
+        seen = set()
+        skills = []
+        
+        # User skills (take priority)
+        for name in self._list_skills_in_dir(self.user_skills_dir):
+            if name not in seen:
+                seen.add(name)
+                skills.append(name)
+        
+        # Built-in skills (only add if not overridden by user)
+        for name in self._list_skills_in_dir(self.builtin_skills_dir):
+            if name not in seen:
+                seen.add(name)
+                skills.append(name)
         
         return skills
     
     def load_skill(self, name):
         """
-        Load skill markdown + frontmatter
+        Load skill markdown + frontmatter.
+        Looks in user skills first, then builtin skills.
         
         Args:
             name: Skill name (directory name)
@@ -48,11 +95,15 @@ class SkillsManager:
             Dict with 'frontmatter' (dict) and 'content' (str)
             Returns None if skill not found
         """
-        # Try user skills first
+        # Try user skills first, then builtin
         skill_path = f"{self.user_skills_dir}/{name}/SKILL.md"
         
         if not file_exists(skill_path):
-            return None
+            # Fall back to builtin skills
+            if self.builtin_skills_dir:
+                skill_path = f"{self.builtin_skills_dir}/{name}/SKILL.md"
+            if not file_exists(skill_path):
+                return None
         
         try:
             with open(skill_path, 'r') as f:

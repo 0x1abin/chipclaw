@@ -71,8 +71,13 @@ ChipClaw's filesystem layout mirrors nanobot's workspace structure while adaptin
 │   │       ├── filesystem.py        # read_file, write_file, list_dir
 │   │       ├── message.py           # Send message to channel
 │   │       ├── hardware.py          # GPIO, I2C, PWM, ADC
-│   │       ├── exec_mpy.py          # exec() MicroPython code
+│   │       ├── exec_mpy.py          # exec() MicroPython code (no shell)
 │   │       └── http_fetch.py        # HTTP GET tool
+│   │
+│   ├── skills/                      # Built-in skills (bundled with package)
+│   │   ├── __init__.py
+│   │   └── peripheral_api/          # MicroPython peripheral API reference
+│   │       └── SKILL.md             # SPI, UART, Timer, NeoPixel, DHT, etc.
 │   │
 │   ├── channels/                    # Communication channels (replaces nanobot.channels)
 │   │   ├── __init__.py
@@ -90,9 +95,9 @@ ChipClaw's filesystem layout mirrors nanobot's workspace structure while adaptin
 │   ├── memory/                      # Memory storage (mirrors ~/.nanobot/workspace/memory/)
 │   │   ├── MEMORY.md                # Long-term memory (created at runtime)
 │   │   └── YYYY-MM-DD.md            # Daily notes (created at runtime)
-│   └── skills/                      # User skills (mirrors ~/.nanobot/workspace/skills/)
-│       └── hardware/                # Built-in hardware skill
-│           └── SKILL.md             # Hardware capabilities documentation
+│   └── skills/                      # User skills (override builtin, mirrors ~/.nanobot/workspace/skills/)
+│       └── hardware/                # Hardware control skill
+│           └── SKILL.md             # GPIO, I2C, PWM, ADC + self-programming examples
 │
 ├── data/                            # Runtime data (mirrors ~/.nanobot/)
 │   └── sessions/                    # Session files (mirrors ~/.nanobot/sessions/)
@@ -321,7 +326,7 @@ class MemoryStore:
 - 3-day memory window (vs. 7 in nanobot) to save RAM
 
 #### `skills.py` — Skills Loader
-**Purpose**: Load and manage skill documents.
+**Purpose**: Load and manage skill documents from user and builtin sources.
 
 **Skill Structure**:
 ```markdown
@@ -343,13 +348,13 @@ class SkillsManager:
     def __init__(self, workspace):
         self.workspace = workspace
         self.user_skills_dir = workspace + "/skills"
-        self.builtin_skills_dir = "/chipclaw/skills"  # (if added)
+        self.builtin_skills_dir = self._find_builtin_skills_dir()
     
     def list_skills(self):
-        """Scan all skills (user + builtin)"""
+        """Scan all skills (user + builtin). User skills override builtin."""
     
     def load_skill(self, name):
-        """Load skill markdown + frontmatter"""
+        """Load skill markdown + frontmatter. User skills first, then builtin."""
     
     def get_always_skills(self):
         """Get skills with 'load: always'"""
@@ -360,8 +365,11 @@ class SkillsManager:
 
 **Key Design Notes**:
 - Simple frontmatter parser (no YAML library — parse `---` blocks manually)
-- Skills stored in `workspace/skills/{name}/SKILL.md`
-- Supports `load: always` for auto-loading
+- User skills stored in `workspace/skills/{name}/SKILL.md`
+- Builtin skills stored in `chipclaw/skills/{name}/SKILL.md` (bundled with package)
+- Builtin skills include MicroPython peripheral API reference (SPI, UART, Timer, NeoPixel, DHT, OneWire, etc.)
+- User skills override builtin skills with the same name
+- Supports `load: always` for auto-loading into system prompt
 
 #### `context.py` — Context Builder
 **Purpose**: Assemble system prompt from bootstrap + memory + skills.
@@ -574,7 +582,11 @@ class ToolRegistry:
 - Provides `__workspace__` variable in scope
 - **Security**: Unrestricted execution (intentional for agent autonomy)
 
-**Example**:
+**Architecture Note**: Because ESP32 MicroPython has no shell/subprocess, all code
+execution is based on `exec()` / `eval()` or creating `.py` files (via `write_file`)
+and importing them via `exec_micropython`. This is the primary execution mechanism.
+
+**Example — Direct exec**:
 ```python
 # Agent can self-program hardware
 code = """
@@ -585,10 +597,18 @@ print("LED turned on")
 """
 ```
 
+**Example — File-based execution**:
+```python
+# Step 1: write_file to create a .py module
+# Step 2: exec_micropython to import and run it
+code = "import my_module; my_module.run()"
+```
+
 **Key Design Notes**:
 - Uses `io.StringIO` to capture stdout
 - `gc.collect()` before/after execution
 - Intentionally **not sandboxed** (agent has full control)
+- For complex logic, prefer creating `.py` files and importing them
 
 #### `http_fetch.py` — HTTP GET
 **Tool**: **HTTPFetchTool**
@@ -1120,7 +1140,7 @@ uasyncio.run(main())
 
 ### Removed Features
 1. **Terminal UI** — Not feasible on ESP32
-2. **Subprocess tools** — No OS shell access
+2. **Shell/Subprocess tools** — ESP32 MicroPython has no shell; all code execution uses `exec()` / `eval()` or file-based import (create `.py` with `write_file`, then `import` via `exec_micropython`)
 3. **Telegram channel** — Requires polling/webhooks (too complex)
 4. **Advanced typing** — MicroPython lacks `typing` module
 5. **Pydantic** — Replaced with plain dict + JSON
@@ -1130,8 +1150,9 @@ uasyncio.run(main())
 1. **MQTT channel** — IoT-native communication
 2. **UART channel** — Serial communication
 3. **Hardware tools** — GPIO, I2C, PWM, ADC
-4. **exec() tool** — Self-programming capability
+4. **exec() tool** — Self-programming capability (replaces shell/subprocess)
 5. **ESP32 runtime info** — Flash/RAM stats in system prompt
+6. **Built-in peripheral API skills** — MicroPython peripheral reference (SPI, UART, Timer, NeoPixel, DHT, OneWire, etc.) auto-loaded into agent context
 
 ### Modified Features
 1. **Memory window** — 3 days (vs. 7) to save RAM
