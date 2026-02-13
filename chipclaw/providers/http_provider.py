@@ -61,7 +61,7 @@ class HTTPProvider(LLMProvider):
         try:
             response = requests.post(
                 url,
-                json=body,
+                data=json.dumps(body).encode('utf-8'),
                 headers=headers
             )
             
